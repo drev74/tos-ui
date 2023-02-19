@@ -11,27 +11,27 @@
 
 <script setup lang="ts">
 import { RegistrationFlow } from 'authclient091';
+import { $ory } from 'src/plugins/injectKeys';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { $ory } from '../plugins/ory';
 import { injectStrict } from '../utils';
 import { makeHandleGetFlowError } from '../utils/flows';
 
 const ory = injectStrict($ory);
-const route = useRoute();
-const router = useRouter();
+const $route = useRoute();
+const $router = useRouter();
 const registrationFlow = ref<RegistrationFlow | undefined>();
-const handleGetFlowError = makeHandleGetFlowError(router);
+const handleGetFlowError = makeHandleGetFlowError($router);
 
 // check if we have a flow param
-const { flow, returnTo } = route.query;
+const { flow, returnTo } = $route.query;
 
 const initializeSelfServiceRegistrationFlowForBrowsers = () =>
   ory
     .createBrowserRegistrationFlow()
     .then((resp) => {
       registrationFlow.value = resp;
-      router.replace({
+      $router.replace({
         query: {
           flow: resp.id,
         },

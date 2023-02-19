@@ -12,6 +12,7 @@ export default {
   test: {
     globals: true,
     environment: "happy-dom",
+    setupFiles: "test/setupTests.ts",
     includeSource: ["src/**/*.{js,ts,vue}"],
     exclude: ["node_modules"],
   },
