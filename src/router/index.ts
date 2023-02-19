@@ -1,5 +1,8 @@
+import { $ory } from 'src/plugins/injectKeys';
+import { injectStrict } from 'src/utils';
 import { createRouter, createWebHistory } from 'vue-router';
-import { Ory } from '../plugins/ory';
+
+const Ory = injectStrict($ory)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

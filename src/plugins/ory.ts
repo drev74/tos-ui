@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Configuration, FrontendApi, Session } from 'authclient091';
-import type { InjectionKey, Plugin } from 'vue';
+import { Configuration, FrontendApi } from 'authclient091';
+import { Plugin } from 'vue';
+import { $ory, $session } from './injectKeys';
 
 const config = new Configuration({
   basePath: 'http://127.0.0.1:4433',
@@ -8,12 +9,6 @@ const config = new Configuration({
 });
 
 const Ory = new FrontendApi(config);
-
-export const $ory: InjectionKey<typeof Ory> = Symbol('$ory');
-export const $session: InjectionKey<Session> = Symbol('$session');
-export const $ory_urls: InjectionKey<{
-  logoutUrl: string;
-}> = Symbol('$ory_urls');
 
 export const OryPlugin: Plugin = {
   install(app) {

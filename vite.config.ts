@@ -5,8 +5,7 @@ import { defineConfig } from 'vite';
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: '192.168.1.93',
-    port: 8888,
+    port: 5050,
     open: true,
     https: false,
     proxy: {},
