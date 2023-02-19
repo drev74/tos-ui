@@ -10,19 +10,18 @@
 </template>
 
 <script setup lang="ts">
-import type { SelfServiceVerificationFlow } from '@ory/client';
 
+import { VerificationFlow } from 'authclient091';
 import { ref } from 'vue';
-import { injectStrict } from '../utils';
-import { $ory } from '../plugins/ory';
 import { useRoute, useRouter } from 'vue-router';
-import OryFlow from '../components/flows/OryFlow.vue';
+import { $ory } from '../plugins/ory';
+import { injectStrict } from '../utils';
 import { makeHandleGetFlowError } from '../utils/flows';
 
 const ory = injectStrict($ory);
 const route = useRoute();
 const router = useRouter();
-const verificationFlow = ref<SelfServiceVerificationFlow | undefined>();
+const verificationFlow = ref<VerificationFlow | undefined>();
 const handleGetFlowError = makeHandleGetFlowError(router);
 
 // check if we have a flow param
@@ -31,14 +30,12 @@ const { flow, returnTo = `${protocol}//${host}/app` } = route.query;
 
 const initializeSelfServiceVerificationFlowForBrowsers = () =>
   ory
-    .initializeSelfServiceVerificationFlowForBrowsers(
-      returnTo ? String(returnTo) : undefined
-    )
-    .then((response) => {
-      verificationFlow.value = response.data;
+    .createBrowserVerificationFlow()
+    .then((resp) => {
+      verificationFlow.value = resp;
       router.replace({
         query: {
-          flow: response.data.id,
+          flow: resp.id,
         },
       });
     })
@@ -50,9 +47,9 @@ if (typeof flow !== 'string') {
   initializeSelfServiceVerificationFlowForBrowsers();
 } else {
   ory
-    .getSelfServiceVerificationFlow(flow)
-    .then((response) => {
-      verificationFlow.value = response.data;
+    .getVerificationFlow({id:flow})
+    .then((resp) => {
+      verificationFlow.value = resp;
     })
     .catch(handleGetFlowError);
 }

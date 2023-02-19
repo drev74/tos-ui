@@ -1,14 +1,5 @@
-<script setup lang="ts">
-import type { UiNode } from '@ory/client';
-import {
-  isUiNodeAnchorAttributes,
-  isUiNodeImageAttributes,
-  isUiNodeInputAttributes,
-  isUiNodeScriptAttributes,
-  isUiNodeTextAttributes,
-} from '@ory/integrations/ui';
-import OryUiNodeInput from './OryUiNodeInput.vue';
-import OryUiMessage from './OryUiMessage.vue';
+<script setup lang="ts">import { UiNode } from 'authclient091';
+
 
 defineProps<{
   node: UiNode;

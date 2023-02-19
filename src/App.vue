@@ -7,6 +7,6 @@ import { RouterView } from 'vue-router';
 </template>
 
 <style lang="scss">
-@import "@/assets/base.scss";
-@import "@/assets/fonts.css";
+@import "src/assets/base.scss";
+@import "src/assets/fonts.css";
 </style>

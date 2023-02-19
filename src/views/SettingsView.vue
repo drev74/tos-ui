@@ -10,19 +10,18 @@
 </template>
 
 <script setup lang="ts">
-import type { SelfServiceSettingsFlow } from '@ory/client';
 
+import { SettingsFlow } from 'authclient091';
 import { ref } from 'vue';
-import { injectStrict } from '../utils';
-import { $ory } from '../plugins/ory';
 import { useRoute, useRouter } from 'vue-router';
-import OryFlow from '../components/flows/OryFlow.vue';
+import { $ory } from '../plugins/ory';
+import { injectStrict } from '../utils';
 import { makeHandleGetFlowError } from '../utils/flows';
 
 const ory = injectStrict($ory);
 const route = useRoute();
 const router = useRouter();
-const settingsFlow = ref<SelfServiceSettingsFlow | undefined>();
+const settingsFlow = ref<SettingsFlow | undefined>();
 const handleGetFlowError = makeHandleGetFlowError(router);
 
 // check if we have a flow param
@@ -30,15 +29,12 @@ const { protocol, host } = window.document.location;
 const { flow, returnTo = `${protocol}//${host}/app` } = route.query;
 
 const initializeSelfServiceSettingsFlowForBrowsers = () =>
-  ory
-    .initializeSelfServiceSettingsFlowForBrowsers(
-      returnTo ? String(returnTo) : undefined
-    )
-    .then((response) => {
-      settingsFlow.value = response.data;
+  ory.createBrowserSettingsFlow()
+    .then((resp) => {
+      settingsFlow.value = resp;
       router.replace({
         query: {
-          flow: response.data.id,
+          flow: resp.id,
         },
       });
     })
@@ -50,9 +46,9 @@ if (typeof flow !== 'string') {
   initializeSelfServiceSettingsFlowForBrowsers();
 } else {
   ory
-    .getSelfServiceSettingsFlow(flow)
-    .then((response) => {
-      settingsFlow.value = response.data;
+    .getSettingsFlow({id:flow})
+    .then((resp) => {
+      settingsFlow.value = resp;
     })
     .catch(handleGetFlowError);
 }

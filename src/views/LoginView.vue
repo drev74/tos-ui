@@ -13,20 +13,18 @@
 </template>
 
 <script setup lang="ts">
-import type { SelfServiceLoginFlow } from '@ory/client';
-import type { AxiosError } from 'axios';
 
+import { LoginFlow } from 'authclient091';
 import { ref } from 'vue';
-import { injectStrict } from '../utils';
-import { $ory } from '../plugins/ory';
 import { useRoute, useRouter } from 'vue-router';
-import OryFlow from '../components/flows/OryFlow.vue';
+import { $ory } from '../plugins/ory';
+import { injectStrict } from '../utils';
 import { makeHandleGetFlowError } from '../utils/flows';
 
 const ory = injectStrict($ory);
 const route = useRoute();
 const router = useRouter();
-const loginFlow = ref<SelfServiceLoginFlow | undefined>();
+const loginFlow = ref<LoginFlow | undefined>();
 const handleGetFlowError = makeHandleGetFlowError(router);
 
 // check if we have a flow param
@@ -34,16 +32,17 @@ const { flow, refresh, aal, returnTo } = route.query;
 
 const initializeSelfServiceLoginFlowForBrowsers = () =>
   ory
-    .initializeSelfServiceLoginFlowForBrowsers(
-      Boolean(refresh),
-      aal ? String(aal) : undefined,
-      returnTo ? String(returnTo) : undefined
+    .createBrowserLoginFlow({
+      refresh: Boolean(refresh),
+      aal: aal ? String(aal) : undefined,
+      returnTo: returnTo ? String(returnTo) : undefined
+    }
     )
-    .then((response) => {
-      loginFlow.value = response.data;
+    .then((resp) => {
+      loginFlow.value = resp
       router.replace({
         query: {
-          flow: response.data.id,
+          flow: resp.id,
         },
       });
     })
@@ -55,9 +54,9 @@ if (typeof flow !== 'string') {
   initializeSelfServiceLoginFlowForBrowsers();
 } else {
   ory
-    .getSelfServiceLoginFlow(flow)
-    .then((response) => {
-      loginFlow.value = response.data;
+    .getLoginFlow({id:flow})
+    .then((resp) => {
+      loginFlow.value = resp;
     })
     .catch(handleGetFlowError);
 }

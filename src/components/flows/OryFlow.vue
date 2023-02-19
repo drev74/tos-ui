@@ -19,30 +19,22 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  SelfServiceLoginFlow,
-  SelfServiceRegistrationFlow,
-  SelfServiceRecoveryFlow,
-  SelfServiceSettingsFlow,
-  SelfServiceVerificationFlow,
-} from '@ory/client';
-import OryUiNode from './OryUiNode.vue';
-import OryUiMessage from './OryUiMessage.vue';
-import { getNodeId } from '@ory/integrations/ui';
+import { LoginFlow, RecoveryFlow, RegistrationFlow, SettingsFlow, VerificationFlow } from 'authclient091';
+
 
 defineProps<{
   flow:
-    | SelfServiceLoginFlow
-    | SelfServiceRegistrationFlow
-    | SelfServiceRecoveryFlow
-    | SelfServiceSettingsFlow
-    | SelfServiceVerificationFlow;
+  | LoginFlow
+  | RegistrationFlow
+  | RecoveryFlow
+  | SettingsFlow
+  | VerificationFlow;
   formId?: string;
 }>();
 </script>
 
 <style scoped lang="scss">
-.ui-node + .ui-node {
+.ui-node+.ui-node {
   margin-top: var(--space-2);
 }
 

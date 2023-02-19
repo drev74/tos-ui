@@ -3,8 +3,8 @@
 	p.open-sans.fs_2 {{ message.text }}
 </template>
 
-<script setup lang="ts">
-import type { UiText } from '@ory/client';
+<script setup lang="ts">import { UiText } from 'authclient091';
+
 
 defineProps<{
   message: UiText;

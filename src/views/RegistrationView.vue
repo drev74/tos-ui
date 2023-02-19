@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import { RegistrationFlow } from 'authclient091';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { $ory } from '../plugins/ory';
@@ -27,12 +28,12 @@ const { flow, returnTo } = route.query;
 
 const initializeSelfServiceRegistrationFlowForBrowsers = () =>
   ory
-    .RegistrationFlowForBrowsers(returnTo ? String(returnTo) : undefined)
-    .then((response) => {
-      registrationFlow.value = response.data;
+    .createBrowserRegistrationFlow()
+    .then((resp) => {
+      registrationFlow.value = resp;
       router.replace({
         query: {
-          flow: response.data.id,
+          flow: resp.id,
         },
       });
     })
@@ -44,9 +45,9 @@ if (typeof flow !== 'string') {
   initializeSelfServiceRegistrationFlowForBrowsers();
 } else {
   ory
-    .getRegistrationFlow(flow)
-    .then((response) => {
-      registrationFlow.value = response.data;
+    .getRegistrationFlow({id: flow})
+    .then((resp) => {
+      registrationFlow.value = resp;
     })
     .catch(handleGetFlowError);
 }

@@ -10,20 +10,18 @@
 </template>
 
 <script setup lang="ts">
-import type { SelfServiceRecoveryFlow } from '@ory/client';
-import type { AxiosError } from 'axios';
 
+import { RecoveryFlow } from 'authclient091';
 import { ref } from 'vue';
-import { injectStrict } from '../utils';
-import { $ory } from '../plugins/ory';
 import { useRoute, useRouter } from 'vue-router';
-import OryFlow from '../components/flows/OryFlow.vue';
+import { $ory } from '../plugins/ory';
+import { injectStrict } from '../utils';
 import { makeHandleGetFlowError } from '../utils/flows';
 
 const ory = injectStrict($ory);
 const route = useRoute();
 const router = useRouter();
-const recoveryFlow = ref<SelfServiceRecoveryFlow | undefined>();
+const recoveryFlow = ref<RecoveryFlow | undefined>();
 const handleGetFlowError = makeHandleGetFlowError(router);
 
 // check if we have a flow param
@@ -31,14 +29,12 @@ const { flow, refresh, aal, returnTo } = route.query;
 
 const initializeSelfServiceRecoveryFlowForBrowsers = () =>
   ory
-    .initializeSelfServiceRecoveryFlowForBrowsers(
-      returnTo ? String(returnTo) : undefined
-    )
-    .then((response) => {
-      recoveryFlow.value = response.data;
+    .createBrowserRecoveryFlow()
+    .then((resp) => {
+      recoveryFlow.value = resp;
       router.replace({
         query: {
-          flow: response.data.id,
+          flow: resp.id,
         },
       });
     })
@@ -50,9 +46,9 @@ if (typeof flow !== 'string') {
   initializeSelfServiceRecoveryFlowForBrowsers();
 } else {
   ory
-    .getSelfServiceRecoveryFlow(flow)
-    .then((response) => {
-      recoveryFlow.value = response.data;
+    .getRecoveryFlow({id:flow})
+    .then((resp) => {
+      recoveryFlow.value = resp;
     })
     .catch(handleGetFlowError);
 }
