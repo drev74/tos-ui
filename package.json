@@ -1,18 +1,21 @@
 {
-  "name": "kratos-selfservice-ui-vue3-typescript",
-  "version": "0.8.2-alpha.1",
+  "name": "kratos-ui",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 5050",
-    "test:unit": "vitest --environment jsdom",
+    "test:unit": "vitest",
     "test:e2e": "start-server-and-test preview http://127.0.0.1:5050/ 'cypress open'",
     "test:e2e:ci": "start-server-and-test preview http://127.0.0.1:5050/ 'cypress run'",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@ory/client": "^1.1.17",
+    "@kirklin/eslint-config": "^0.2.6",
+    "@kirklin/logger": "^0.0.1",
+    "authclient091": "^0.0.1",
     "axios": "^0.25.0",
     "pinia": "^2.0.30",
     "sass-loader": "^10.4.1",
@@ -22,21 +25,20 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/node": "^16.18.12",
-    "@vitejs/plugin-vue": "^2.3.4",
-    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^10.0.0",
     "@vue/test-utils": "^2.2.10",
     "@vue/tsconfig": "^0.1.3",
     "cypress": "^9.7.0",
     "eslint": "^8.34.0",
     "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-tailwindcss": "^3.8.3",
     "eslint-plugin-vue": "^8.7.1",
     "happy-dom": "^8.6.0",
-    "prettier": "^2.8.4",
     "sass": "^1.58.3",
     "start-server-and-test": "^1.15.4",
-    "typescript": "~4.5.5",
-    "vite": "^2.9.15",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.2",
     "vitest": "^0.28.5",
     "vue-tsc": "^0.31.4"
   }

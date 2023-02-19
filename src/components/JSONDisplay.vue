@@ -53,7 +53,7 @@ p {
 
   &::before {
     position: absolute;
-    content: ' ';
+    content: " ";
     height: 7px;
     width: 7px;
     border-top: 2px solid var(--color-text);

@@ -10,20 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import type { SelfServiceRegistrationFlow } from '@ory/client';
-import type { AxiosError } from 'axios';
-
 import { ref } from 'vue';
-import { injectStrict } from '../utils';
-import { $ory } from '../plugins/ory';
 import { useRoute, useRouter } from 'vue-router';
-import OryFlow from '../components/flows/OryFlow.vue';
+import { $ory } from '../plugins/ory';
+import { injectStrict } from '../utils';
 import { makeHandleGetFlowError } from '../utils/flows';
 
 const ory = injectStrict($ory);
 const route = useRoute();
 const router = useRouter();
-const registrationFlow = ref<SelfServiceRegistrationFlow | undefined>();
+const registrationFlow = ref<RegistrationFlow | undefined>();
 const handleGetFlowError = makeHandleGetFlowError(router);
 
 // check if we have a flow param
@@ -31,9 +27,7 @@ const { flow, returnTo } = route.query;
 
 const initializeSelfServiceRegistrationFlowForBrowsers = () =>
   ory
-    .initializeSelfServiceRegistrationFlowForBrowsers(
-      returnTo ? String(returnTo) : undefined
-    )
+    .RegistrationFlowForBrowsers(returnTo ? String(returnTo) : undefined)
     .then((response) => {
       registrationFlow.value = response.data;
       router.replace({
@@ -50,7 +44,7 @@ if (typeof flow !== 'string') {
   initializeSelfServiceRegistrationFlowForBrowsers();
 } else {
   ory
-    .getSelfServiceRegistrationFlow(flow)
+    .getRegistrationFlow(flow)
     .then((response) => {
       registrationFlow.value = response.data;
     })

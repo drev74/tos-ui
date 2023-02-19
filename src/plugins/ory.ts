@@ -1,17 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { Plugin, InjectionKey } from 'vue';
-import { Configuration, V0alpha2Api } from '@ory/client';
-import type { Session, SelfServiceLogoutUrl } from '@ory/client';
-import type { AxiosResponse } from 'axios';
+import { Configuration, FrontendApi, Session } from 'authclient091';
+import type { InjectionKey, Plugin } from 'vue';
 
-export const Ory = new V0alpha2Api(
-  new Configuration({
-    basePath: import.meta.env.VITE_APP_ORY_BASE_PATH,
-    baseOptions: {
-      withCredentials: true,
-    },
-  })
-);
+const config = new Configuration({
+  basePath: 'http://127.0.0.1:4433',
+  credentials: 'include',
+});
+
+const Ory = new FrontendApi(config);
 
 export const $ory: InjectionKey<typeof Ory> = Symbol('$ory');
 export const $session: InjectionKey<Session> = Symbol('$session');
@@ -26,8 +22,8 @@ export const OryPlugin: Plugin = {
 
     // can now be used with inject($session)
     Ory.toSession()
-      .then(({ data }) => {
-        app.provide($session, data);
+      .then((sess) => {
+        app.provide($session, sess);
       })
       .catch(() => {
         console.log('[Ory] User has no session.');
@@ -35,18 +31,9 @@ export const OryPlugin: Plugin = {
 
     Promise.all([
       // get the logout url
-      Ory.createSelfServiceLogoutFlowUrlForBrowsers().catch(
-        () =>
-          ({
-            data: {
-              logout_url: '',
-            },
-          } as AxiosResponse<SelfServiceLogoutUrl>)
-      ),
-    ]).then(([{ data: logoutData }]) => {
-      app.provide($ory_urls, {
-        logoutUrl: logoutData.logout_url,
-      });
-    });
+      Ory.createBrowserLogoutFlow({ cookie: '' }).catch(() => ({
+        data: { logout_url: '' },
+      })).data.logout_url || '',
+    ]);
   },
 };
