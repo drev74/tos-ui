@@ -1,14 +1,37 @@
-import { fileURLToPath, URL } from 'url';
-
+import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  server: {
+    host: '192.168.1.93',
+    port: 8888,
+    open: true,
+    https: false,
+    proxy: {},
+  },
+  plugins: [
+    vue({
+      // https://vuejs.org/guide/extras/reactivity-transform.html
+      // 开启响应性语法糖 （试验性特性）
+      // Reactivity Transform
+      reactivityTransform: false,
+    }),
+  ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      src: path.resolve(__dirname, './src'),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+      @import "src/styles/variables.scss";
+    `,
+        javascriptEnabled: true,
+      },
     },
   },
 });
